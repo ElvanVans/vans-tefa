@@ -20,7 +20,7 @@
             <div class="card bg-buku rounded-5">
               <div class="card-body">
                 <div class="Elvan">
-                  <h2>Buku</h2>
+                  <h2>Cari Buku</h2>
                 </div>
               </div>
             </div>
@@ -31,16 +31,14 @@
           <div class="col-lg-6 box">
             <div class="card b2 rounded-5">
               <div class="card-body text">
-                <h1 class="no">5</h1>
-                <p class="yes">Pengunjung</p>
+                <h2><span class="no">{{ jml_pengunjung }}</span> pengunjung</h2>
               </div>
             </div>
           </div>
           <div class="col-lg-6 box">
             <div class="card b3 rounded-5">
               <div class="card-body text">
-                <h1 class="no">30</h1>
-                <p class="yes">Buku</p>
+                <h2><span class="no">{{ jml_buku }}</span> Buku</h2>
               </div>
             </div>
           </div>
@@ -54,7 +52,30 @@
     </template>
   
   <script setup>
-  useHead({ title: "Home/Perpustakaan Digital" })
+  const supabase = useSupabaseClient()
+  const jml_pengunjung = ref(0)
+  const jml_buku = ref(0)
+  
+  async function getjml_pengunjung() {
+    const{ error , data, count } = await supabase
+    .from("Pengunjung")
+    .select('*', { count: 'exact' })
+    if (count) jml_pengunjung.value = count
+    
+  }
+  async function getjml_buku() {
+    const{ error , data, count } = await supabase
+    .from("Buku")
+    .select('*', { count: 'exact' })
+    if (count) jml_buku.value = count
+    
+  }
+  
+  
+  onMounted(() => {
+    getjml_pengunjung()
+    getjml_buku()
+  })
   </script>
   
   <style scoped>
@@ -102,8 +123,9 @@
     font-size: 25px;
     padding-top: 40px;
   }
-  .Radi{
+  .elvan{
     color: rgb(255, 255, 255);
     font-family: 'Times New Roman', Times, serif;
+    
   }
   </style>
